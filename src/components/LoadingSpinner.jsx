@@ -4,7 +4,6 @@
     return(
       <div className="spinner-container">
        <div className="loading-spinner">
-        oi
        </div>
       </div>
     )

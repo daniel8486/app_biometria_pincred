@@ -33,9 +33,7 @@ export function SignIn(){
     setIsOpen(false);
   }
 
-  function notifyWarning(){
-    toast.warn("Usuário ou Senha, errados");
-  }
+  
 
   function notifyDanger(){
     if(user === '' && pass === ''){  
@@ -45,7 +43,7 @@ export function SignIn(){
 
     const [] = useState([])
    
-    const handleLogin = async () => {
+    const handleLogin = async (event) => {
       event.preventDefault();
       notifyDanger();
       try {
@@ -63,7 +61,10 @@ export function SignIn(){
           console.log('aqui 1 ',error.message); 
           console.log('aqui 2',error.response.status); 
           console.log('aqui 3',error);
-          notifyWarning();
+          function notifyWarning(){
+            toast.warn(`Alerta: ${error.message}`);
+          }
+          notifyWarning(); 
         }
         
         setIsLoading(false);

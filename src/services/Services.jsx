@@ -15,6 +15,27 @@ async function login(user,pass){
      return response 
 }
 
+async function consultaProsp(cpf){
+
+  console.log('meu cpf na api =>',cpf.match(/\d/g).join(""))
+
+  let data = JSON.stringify({
+    "nrInst": "1368",
+    "nrAgen": 19,
+    "cdConven": 108,
+    "nmLogin": "pincred",
+    "nrCPFCNPJ": `${cpf.match(/\d/g).join("")}`
+  });
+
+  let headers = { 
+    'Authorization': `Bearer ${localStorage.getItem('@token').slice(1,-1)}`,
+    'Content-Type': 'application/json'
+  }
+
+  const response = axios.post(URL_API+`/BJ21M05/BJ21SS0501E/consultarProposta`,data,{ headers: headers })
+  return response 
+}
+
 function isLogged(){
   let username = localStorage.getItem('@username')
   if(username !== null && username !== undefined){
@@ -26,7 +47,8 @@ function isLogged(){
 
 
 export {
-  login
+  login, 
+  consultaProsp
 }
 
 
