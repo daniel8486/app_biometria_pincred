@@ -126,3 +126,27 @@
     background-color: var(--blue-200);
 
 }
+
+.h1 {
+ text-align: center;
+}
+
+.tilt{
+  background-color: #014EA3;
+  color: #fff;
+  font-size: 14px;
+  
+  border: none !important;
+  transition: all linear 160ms;
+  cursor: pointer;
+  margin: 0 !important;
+
+  padding: 15px;
+  font-size: 14px;
+  border: 1px solid #fff;
+  margin-bottom: 20px;
+  margin-top: 5px;
+  border-radius: 4px;
+  transition: all linear 160ms;
+  outline: none;
+}

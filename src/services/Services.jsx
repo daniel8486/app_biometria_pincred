@@ -17,14 +17,16 @@ async function login(user,pass){
 
 async function consultaProsp(cpf){
 
-  console.log('meu cpf na api =>',cpf.match(/\d/g).join(""))
+  //console.log('meu cpf na api =>',cpf.match(/\d/g).join(""))
+  localStorage.setItem('@cpf',cpf.match(/\d/g).join("")); 
+  console.log('meu cpf na api consultaProsp =>',localStorage.getItem('@cpf'))
 
   let data = JSON.stringify({
     "nrInst": "1368",
     "nrAgen": 19,
     "cdConven": 108,
     "nmLogin": "pincred",
-    "nrCPFCNPJ": `${cpf.match(/\d/g).join("")}`
+    "nrCPFCNPJ": `${localStorage.getItem('@cpf')}`
   });
 
   let headers = { 
@@ -34,11 +36,54 @@ async function consultaProsp(cpf){
 
   const response = axios.post(URL_API+`/BJ21M05/BJ21SS0501E/consultarProposta`,data,{ headers: headers })
   return response 
+  
 }
 
-function isLogged(){
+async function consultaCliente(){
+
+  console.log('meu cpf na api clientes =>',localStorage.getItem('@cpf'))
+
+  {if(localStorage.getItem('@cpf') != null && localStorage.getItem('@cpf') != undefined && localStorage.getItem('@cpf') != '')
+   {
+
+    let headers = { 
+      'Authorization': `Bearer ${localStorage.getItem('@token').slice(1,-1)}`,
+      'Content-Type': 'application/json'
+    }
+  
+    const responseCliente = axios.get(URL_API+`/BJ21M05/BJ21SS0502J/buscarCliente?nrClient=${localStorage.getItem('@cpf')}`,{ headers: headers })
+    return responseCliente 
+
+   } else {
+     console.log('Vazio')
+   }
+  }
+
+  
+}
+
+async function consultarAnexos(){
+  
+  {if(localStorage.getItem('@nrProsp') != null && localStorage.getItem('@nrProsp') != undefined){
+   
+    let headers = { 
+      'Authorization': `Bearer ${localStorage.getItem('@token').slice(1,-1)}`,
+      'Content-Type': 'application/json'
+    }
+  
+    const responseListAnexo = axios.get(URL_API+`/BJ21M05/BJ21SS0501A/consultarAnexos?nrProsp=${localStorage.getItem('@nrProsp')}`,{ headers: headers })
+    return responseListAnexo  
+
+   } else {
+    console.log('Vazio')
+   }
+  }
+}
+
+async function isLogged(){
   let username = localStorage.getItem('@username')
-  if(username !== null && username !== undefined){
+  let token = localStorage.getItem('@token')
+  if(username !== null && username !== undefined && token !== undefined && token !== null){
     return true 
   }
 
@@ -48,7 +93,10 @@ function isLogged(){
 
 export {
   login, 
-  consultaProsp
+  consultaProsp,
+  consultaCliente,
+  isLogged,
+  consultarAnexos
 }
 
 
