@@ -3,7 +3,7 @@ import styles from './Post.module.css';
 import icon from '../assets/images/user-60.png'
 import { Base64 } from 'js-base64';
 import { URL_API } from '../api/Api';
-import { consultaProsp,consultaCliente,isLogged,consultarAnexos } from '../services/Services';
+import { consultaProsp,consultaCliente,isLogged,consultarAnexos,pegaFoto } from '../services/Services';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import {useTable} from 'react-table';
 
@@ -25,6 +25,8 @@ export function Post(){
 
     const [data,setData] = useState([]);
     const [dataCliente,setDataCliente] = useState([]);
+    const [dataClienteAnexo,setDataClienteAnexo] = useState([]);
+    const [dataAnexo,setDataAnexo] = useState([]);
 
     
    const handleConsultaCpf = async (event) => {
@@ -58,20 +60,39 @@ export function Post(){
     }
 
 
-    const handleConsultaAnexos = async (e) => {
-      console.log('Estou aqui => Oba',e)
+    const handleConsultaAnexos = async (item) => {
+      event.preventDefault();
+      console.log('myProsp =>',JSON.parse(JSON.stringify(item)))
+      let searchAnexo = JSON.parse(JSON.stringify(item)); 
       try {
         setIsLoading(true); 
-        let responseListAnexo= await consultarAnexos()
-        console.log('resposta cliente Anexos => ',responseListAnexo.data)
-        setDataCliente(responseListAnexo.data);
+        let responseListAnexo= await consultarAnexos(searchAnexo)
+        console.log('resposta cliente Anexos => ',responseListAnexo.data.listAnexos)
+        setDataClienteAnexo(responseListAnexo.data.listAnexos);
+        
       } catch (error) {
         
       }
       setIsLoading(false); 
     }
 
-    
+    const handleConsultarFoto = async (a) => {
+      event.preventDefault();
+      console.log('sequencial foto', JSON.parse(JSON.stringify(a)));
+      let nrSeq  = JSON.parse(JSON.stringify(a)); 
+      try {
+        setIsLoading(true); 
+        let responseAnexo= await pegaFoto(nrSeq)
+        console.log('resposta cliente Anexo Base 64 => ',responseAnexo.data.imAnexo)
+        setDataAnexo(responseAnexo.data.imAnexo);
+        
+      } catch (error) {
+        
+      }
+      setIsLoading(false); 
+    }
+
+  
     return(
         <> 
          <article className={styles.post}> 
@@ -102,11 +123,10 @@ export function Post(){
             </div>
 
              { data.map((item,index,data) => {
-              { item.id = index ;}
+              { item.id = index }
               { item.nrStatus = item['nrStatus'] } 
               { item.dsStatus = item['dsStatus'] } 
               { item.nrProsp = item['nrProsp'] } 
-              { localStorage.setItem('@nrProsp',item.nrProsp)}
               { item.historico = item['historico']}
                { if(item.nrStatus === 4080){
                 return(
@@ -115,31 +135,63 @@ export function Post(){
                       <h1 className={styles.post.h1 }> Dados do Contrato </h1>
                      <hr />
                       <ul> 
-                       <li> Número da Proposta : { item.nrProsp }</li>
-                       <li> Status : { item.dsStatus }</li>
+                       <li key={index}>
+                        <p> Número da Proposta : { item.nrProsp }  </p>
+                        <p> Status : { item.dsStatus } </p> 
+                       </li>
                        {
                         item.historico.map((emp,i) => {
                          { if(emp.nrStatus === 4020){
                           return(
-                            <ul>
-                              <li> Data : { emp.dtIn }</li>
-                              <li> Status : { emp.nrStatus}</li>
-                              <li> Descrição : { emp.dsStatus }</li>
-                              <li> </li>
-                              <li> 
-                                <button href='#' className={styles.tilt} onClick={ (e = item.nrProsp) => handleConsultaAnexos(e) }> 
-                                   Consulta Imagem 
-                                </button> 
-                              </li> 
-                              <li> </li>
-                            </ul>
-
+                            <div> 
+                             <p> Data : { emp.dtIn } </p>
+                             <p> Status : { emp.nrStatus} </p>
+                             <p> Descrição : { emp.dsStatus } </p>
+                            </div>
                           )
                          }} 
                         })
                        }
+                       <div>
+                         <button href='#' className={styles.tilt} value={item['nrProsp']} onClick={ (e) => handleConsultaAnexos(e.target.value) }> 
+                            Consultar Dados 
+                         </button>
+                       </div>    
                       </ul>
                     <hr />
+
+                    <div> 
+                      { dataClienteAnexo.map( (a,i) => {
+                         console.log('Anexo Principal',a['dsAnexo'].match(/Biometria/))
+                         if(a['dsAnexo'].match(/Biometria/)){
+                          return (
+                           <div>  
+                            <li key={i}> 
+                              <p> { a['dsAnexo'] } </p>
+                              <p> { a['nrSeq'] } </p> 
+                            </li>
+                            <button href='#' className={styles.tilt} value={a['nrSeq']} onClick={ (e) => handleConsultarFoto(e.target.value) }> 
+                              Consultar Biometria 
+                            </button>
+                           </div> 
+                           )
+                         }else {
+                          return <li> { null } </li> 
+                         }
+                        })
+                      }
+                    </div>
+                    <br />
+                    <hr />
+                    <br />
+                    <div className={styles.containerDiv}> 
+                        <img src={`data:image/jpeg;base64,${dataAnexo}`} />
+                         <li> 
+                         <button href='#' className={styles.tilt} value={null} onClick={ (e) => handleConsultarFoto(e.target.value) }> 
+                           Validar SERPRO
+                         </button>
+                         </li>
+                    </div>
                   </div>
                 ) 
                }}

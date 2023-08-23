@@ -1,4 +1,4 @@
-.post {
+  .post {
     background: var(--grey-800);
     border-radius: 8px;
     padding: 2.5rem;  
@@ -150,3 +150,8 @@
   transition: all linear 160ms;
   outline: none;
 }
+
+li {
+  list-style: none;
+}
+

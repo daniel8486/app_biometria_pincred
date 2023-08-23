@@ -62,22 +62,39 @@ async function consultaCliente(){
   
 }
 
-async function consultarAnexos(){
+async function consultarAnexos(searchAnexo){
+  console.log('localSrorage',localStorage.setItem('@nrProsp',searchAnexo));
+  console.log('Localizei',localStorage.getItem('@nrProsp'));
+  console.log('na API',searchAnexo);
+
   
-  {if(localStorage.getItem('@nrProsp') != null && localStorage.getItem('@nrProsp') != undefined){
+  {if(searchAnexo != null && searchAnexo != undefined){
    
     let headers = { 
       'Authorization': `Bearer ${localStorage.getItem('@token').slice(1,-1)}`,
       'Content-Type': 'application/json'
     }
   
-    const responseListAnexo = axios.get(URL_API+`/BJ21M05/BJ21SS0501A/consultarAnexos?nrProsp=${localStorage.getItem('@nrProsp')}`,{ headers: headers })
+    const responseListAnexo = axios.get(URL_API+`/BJ21M05/BJ21SS0501A/consultarAnexos?nrProsp=${searchAnexo}`,{ headers: headers })
     return responseListAnexo  
 
    } else {
     console.log('Vazio')
    }
   }
+}
+
+async function pegaFoto(nrSeq){
+ 
+  let headers = { 
+    'Authorization': `Bearer ${localStorage.getItem('@token').slice(1,-1)}`,
+    'Content-Type': 'application/json'
+  }
+
+  const responseAnexo = axios.get(URL_API+`/BJ21M05/BJ21SS0501A/visualizarAnexo?nrProsp=${localStorage.getItem('@nrProsp')}&nrSeq=${nrSeq}&tpAnexo=1`,{ headers: headers })
+  return responseAnexo  
+
+  
 }
 
 async function isLogged(){
@@ -96,7 +113,8 @@ export {
   consultaProsp,
   consultaCliente,
   isLogged,
-  consultarAnexos
+  consultarAnexos,
+  pegaFoto
 }
 
 
