@@ -3,9 +3,10 @@ import styles from './Post.module.css';
 import icon from '../assets/images/user-60.png'
 import { Base64 } from 'js-base64';
 import { URL_API } from '../api/Api';
-import { consultaProsp,consultaCliente,isLogged,consultarAnexos,pegaFoto } from '../services/Services';
+import { consultaProsp,consultaCliente,consultarAnexos,pegaFoto } from '../services/Services';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import {useTable} from 'react-table';
+import { useNavigate } from 'react-router-dom';
 
 
 export function Post(){
@@ -13,6 +14,8 @@ export function Post(){
    const [cpf,setCpf] = useState('');
 
    const [isLoading, setIsLoading] = useState(false);
+
+   const navigate = useNavigate();
 
    const cpfMask = value => {
     return value
@@ -91,7 +94,15 @@ export function Post(){
       }
       setIsLoading(false); 
     }
-
+      
+    //useEffect(() => {
+    //  if(isLogged === true){
+    //    console.log('Seja Bem Vindo ...')
+    //  }else{
+    //    navigate('/login');
+    //  }
+    //  isLogged();
+    //},[])
   
     return(
         <> 
@@ -100,7 +111,7 @@ export function Post(){
                 <div className={styles.author}> 
                   <img className={styles.avatar} src={icon} />
                    <div className={styles.authorInfor}> 
-                    <strong> { localStorage.getItem('@username').slice(1,-1).toUpperCase() } </strong>
+                    <strong> {localStorage.getItem('@username') != null || undefined ? localStorage.getItem('@username').slice(1,-1).toUpperCase() : '' } </strong>
                    </div>
                 </div>
                 <time title="Maio-2023" dateTime=""> {date.toLocaleDateString()} </time>
@@ -118,7 +129,6 @@ export function Post(){
                  { isLoading ? <LoadingSpinner /> : 
                   <button className={styles.btn}> Consultar </button>
                  }
-             
              </form>
             </div>
 
@@ -130,7 +140,7 @@ export function Post(){
               { item.historico = item['historico']}
                { if(item.nrStatus === 4080){
                 return(
-                  <div>
+                  <div className={styles.content}>
                      <hr />
                       <h1 className={styles.post.h1 }> Dados do Contrato </h1>
                      <hr />
@@ -160,7 +170,7 @@ export function Post(){
                       </ul>
                     <hr />
 
-                    <div> 
+            <div className={styles.content}>  
                       { dataClienteAnexo.map( (a,i) => {
                          console.log('Anexo Principal',a['dsAnexo'].match(/Biometria/))
                          if(a['dsAnexo'].match(/Biometria/)){
@@ -210,6 +220,10 @@ export function Post(){
             */}
 
          </article>
+
+
+         
+
         </>
     )
 }

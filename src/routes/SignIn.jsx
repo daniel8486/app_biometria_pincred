@@ -41,7 +41,7 @@ export function SignIn(){
     }
   }
 
-    const [] = useState([])
+    //const [] = useState([])
    
     const handleLogin = async (event) => {
       event.preventDefault();
@@ -53,6 +53,7 @@ export function SignIn(){
             console.log('resposta => ',response)
             localStorage.setItem('@username', JSON.stringify(response.data.username))
             localStorage.setItem('@token', JSON.stringify(response.headers.auth))
+            console.log(response.data.username === user);
             if(response.data.username === user && response.status === 200 && response != undefined){
                 navigate('/home');   
             }

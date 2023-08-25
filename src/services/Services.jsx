@@ -97,46 +97,22 @@ async function pegaFoto(nrSeq){
   
 }
 
-async function isLogged(){
-  let username = localStorage.getItem('@username')
-  let token = localStorage.getItem('@token')
-  if(username !== null && username !== undefined && token !== undefined && token !== null){
-    return true 
-  }
-
-  return false 
-}
+//async function isLogged(){
+//  let username = localStorage.getItem('@username')
+//  let token = localStorage.getItem('@token')
+//  if(username !== null && username !== undefined && token !== undefined && token !== null){
+//    return true 
+//  }
+//
+//  return false 
+//}
 
 
 export {
   login, 
   consultaProsp,
   consultaCliente,
-  isLogged,
   consultarAnexos,
   pegaFoto
 }
 
-
-
-
-    //let config = {
-   // method: 'post',
-   // maxBodyLength: Infinity,
-   // url: `${URL_API}/user`,
-   // headers: { 
-   //   'Authorization': `Basic ${Base64.encode(`${user}:${pass}`)}`,
-   //   'Content-Type': 'application/json'
-   // }
-   //};
-  
-   // axios.request(config)
-   // .then((response) => {
-   //   console.log('resposta na API =>',JSON.stringify(response.data));
-   //   console.log('resposta na API =>',JSON.stringify(response.status));
-   //   console.log('resposta na API =>',JSON.stringify(response.headers.auth));
-   //   return response 
-   // })
-   // .catch((error) => {
-   //   console.log(error);
-   // });

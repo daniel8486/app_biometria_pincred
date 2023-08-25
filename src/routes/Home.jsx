@@ -8,17 +8,19 @@ import { Sidebar } from '../components/Sidebar';
 import { Post } from '../components/Post';
 
 export function Home(){
-   const [isLogged,setIsLogged] = useState(false);
+   //const [isLogged,setIsLogged] = useState(false);
 
    const navigate = useNavigate();
+   
+   console.log('TOKEN => ',localStorage.getItem('@token'))
 
     useEffect(() => {
       function logIn(){
-       if(localStorage.getItem('@username') === null || undefined ){
+       if(localStorage.getItem('@username') === null || localStorage.getItem('@username') === undefined){
          navigate('/login');
        }else{
         function notifySuccess(){
-          toast.success(`Logado com Sucesso, ${localStorage.getItem('@username').slice(1,-1).toUpperCase()}`, {
+          toast.success(`Logado com Sucesso, ${localStorage.getItem('@username') != null || undefined ? localStorage.getItem('@username').slice(1,-1).toUpperCase(): 'Não Logado'}`, {
             position: toast.POSITION.TOP_CENTER
           });
          }

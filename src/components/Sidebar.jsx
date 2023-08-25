@@ -23,9 +23,9 @@ export function Sidebar(){
 
            <footer>
 
-            <a onClick={exit}>
-             Sair
-            </a>
+            <button onClick={exit} className={styles.btn}> 
+                 Sair
+            </button>
 
            
 
